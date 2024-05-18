@@ -39,11 +39,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="/lao/project/css/styles.css">
+    <link rel="stylesheet" href="/lao/project/css/login.css">
 </head>
 <body>
 <?php include '../views/partials/header.php'; ?>
 
-<div class="container">
+<div class="login-container">
     <h1>Login</h1>
     <form action="" method="post">
         <div class="form-group">

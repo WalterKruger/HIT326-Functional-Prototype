@@ -13,19 +13,12 @@ header {
     padding: 10px 20px;
     text-align: center;
     font-size: 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 header a {
     color: #ffffff;
     text-decoration: none;
     margin: 0 10px;
-}
-
-header a:hover {
-    text-decoration: underline;
 }
 
 .container {
@@ -60,35 +53,28 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Article styles */
-.articles-container {
-    padding: 20px;
+/* Login/Signup form */
+.login-container {
     background: white;
+    padding: 30px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-top: 20px;
-}
-
-.article {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 10px 0;
-}
-
-.article h2 {
-    margin-top: 0;
-}
-
-.article p {
-    margin-bottom: 0;
-}
-
-/* Footer styles */
-footer {
-    background-color: #007BFF;
-    color: white;
     text-align: center;
+    margin: 50px auto;
+    width: 300px;
+}
+
+.login-container .form-group {
+    margin-bottom: 15px;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: calc(100% - 20px);
     padding: 10px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }

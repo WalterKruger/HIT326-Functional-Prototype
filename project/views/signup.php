@@ -1,3 +1,36 @@
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../config/db.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $conn = Database::getInstance()->getConnection();
+    $username = trim($_POST['username']);
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $error = "Username already exists.";
+    } else {
+        $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
+        $stmt->bind_param("ss", $username, $password);
+        if ($stmt->execute()) {
+            header("Location: /lao/project/views/login.php");
+            exit;
+        } else {
+            $error = "Error: " . $stmt->error;
+        }
+        $stmt->close();
+    }
+    $conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,30 +40,25 @@
     <link rel="stylesheet" href="/lao/project/css/login.css">
 </head>
 <body>
-<?php include 'partials/header.php'; ?>
+<?php include '../views/partials/header.php'; ?>
+
 <div class="login-container">
     <h1>Sign Up</h1>
-    <form action="/lao/project/controllers/AuthController.php" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
+    <form action="" method="post">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
         <button type="submit">Sign Up</button>
+        <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
     </form>
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const form = document.querySelector("form");
-        form.addEventListener("submit", function(event) {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            if (!username || !password) {
-                alert("Both username and password are required!");
-                event.preventDefault();  // Prevent form submission
-            }
-        });
-    });
-    </script>
+    <p>Already have an account? <a href="/lao/project/views/login.php">Login</a></p>
 </div>
-<?php include 'partials/footer.php'; ?>
+
+<?php include '../views/partials/footer.php'; ?>
 </body>
 </html>

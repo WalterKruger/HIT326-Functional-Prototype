@@ -1,7 +1,8 @@
 <?php
-session_start();
-session_unset();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 session_destroy();
-header('Location: /lao/project/views/login.php');
+header("Location: /lao/project/views/login.php");
 exit;
 ?>
