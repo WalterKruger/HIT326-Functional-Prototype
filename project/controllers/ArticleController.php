@@ -1,11 +1,11 @@
 <?php
-include_once '../models/Article.php';
-
+require_once '../models/Article.php';
 
 class ArticleController {
-    public function index() {
+    public function showArticles() {
         $articleModel = new Article();
         $articles = $articleModel->fetchAll();
-        include 'views/articles.php';
+        require '../views/articles.php';
     }
 }
+?>

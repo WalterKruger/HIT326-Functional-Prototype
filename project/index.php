@@ -1,24 +1,25 @@
 <?php
 require 'config/db.php';
+
 $page = $_GET['page'] ?? 'home';
 
 switch ($page) {
     case 'login':
-        require 'controllers/LoginController.php';
-        $controller = new LoginController();
-        $controller->login();
+        require 'views/login.php';
         break;
-    case 'register':
-        require 'controllers/AuthController.php';
-        $controller = new AuthController();
-        $controller->register();
+    case 'signup':
+        require 'views/signup.php';
         break;
     case 'articles':
         require 'controllers/ArticleController.php';
         $controller = new ArticleController();
-        $controller->showArticles();
+        $controller->index();
+        break;
+    case 'dashboard':
+        require 'views/dashboard.php';
         break;
     default:
-        include 'views/home.php';
+        require 'views/home.php';
+        break;
 }
 ?>

@@ -1,14 +1,29 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "project";
+class Database {
+    private static $instance = null;
+    private $conn;
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+    private $servername = "localhost";
+    private $username = "root";
+    private $password = "";
+    private $dbname = "project";
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    private function __construct() {
+        $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+    }
+
+    public static function getInstance() {
+        if (!self::$instance) {
+            self::$instance = new Database();
+        }
+        return self::$instance;
+    }
+
+    public function getConnection() {
+        return $this->conn;
+    }
 }
 ?>

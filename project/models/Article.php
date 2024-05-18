@@ -1,13 +1,11 @@
 <?php
-require_once __DIR__ . '/../config/db.php'; // More robust and flexible
-
+require_once __DIR__ . '/../config/db.php';
 
 class Article {
     private $db;
 
     public function __construct() {
-        global $conn;
-        $this->db = $conn;
+        $this->db = Database::getInstance()->getConnection();
     }
 
     public function fetchAll() {
