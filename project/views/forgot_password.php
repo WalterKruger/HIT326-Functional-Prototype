@@ -1,18 +1,24 @@
+<?php
+// Logic for handling password reset can be implemented here
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Forgot Password</title>
-    <link rel="stylesheet" href="/lao/project/css/styles.css">
+    <link rel="stylesheet" href="/lao/project/css/login.css">
 </head>
 <body>
-<?php include '../views/partials/header.php'; ?>
-
 <div class="login-container">
     <h1>Forgot Password</h1>
-    <p>Please contact the administrator to reset your password.</p>
+    <form action="" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Reset Password</button>
+    </form>
+    <a href="/lao/project/views/login.php">Login</a> | 
+    <a href="/lao/project/views/signup.php">Sign Up</a>
 </div>
-
-<?php include '../views/partials/footer.php'; ?>
 </body>
 </html>
