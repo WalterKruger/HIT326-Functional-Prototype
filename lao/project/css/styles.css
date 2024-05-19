@@ -10,7 +10,12 @@ body, html {
 header {
     background-color: #007BFF;
     color: #ffffff;
+
+    position: fixed;
+    position: -webkit-sticky; /* Safari */
+    width: 100%;
     padding: 10px 20px;
+
     text-align: center;
     font-size: 24px;
 }
@@ -39,7 +44,7 @@ footer {
     color: white;
     text-align: center;
     padding: 10px;
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: 100%;
 }
@@ -94,3 +99,18 @@ a:hover {
     color: #555;
     line-height: 1.6;
 }
+
+/* Table formatting */
+table, th, td {
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 3px;
+}
+
+th {
+    background-color: lightgray;
+}
+/* End Table formatting */

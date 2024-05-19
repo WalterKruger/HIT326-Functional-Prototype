@@ -1,11 +1,10 @@
 <?php
 session_start();
-require_once '../config/db.php';
 
 // Check if the user is logged in and is an author
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'author') {
-    header('Location: login.php'); // Redirect to login page if not authorized
-    exit;
+    //header('Location: login.php'); // Redirect to login page if not authorized
+    //exit;
 }
 ?>
 
