@@ -1,3 +1,8 @@
+<?php
+    if (session_status() == PHP_SESSION_NONE) 
+        session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +14,7 @@
 <?php include 'partials/header.php'; ?>
 <div class="container">
     <h1>My Profile</h1>
-    <!-- Display user profile information here -->
+    <?php include '../controllers/ProfileController.php'; ?>
 </div>
 <?php include 'partials/footer.php'; ?>
 </body>

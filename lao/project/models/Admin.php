@@ -1,5 +1,6 @@
 <?php
-    require 'Base.php';
+    // Include The base (need for inserting new accounts)
+    require "User.php";
 
     class Admin extends ModelBase {
         // Filter function
@@ -45,20 +46,16 @@
 
         public function populateUsers($data) {
             echo "<h4>Inserting data into table...</h4>";
+            $this->db->query("DELETE FROM Account_to_type");
+            $this->db->query("DELETE FROM Account");
 
-            $db_table = "Account";
-
-            // First clear table
-            $this->db->query("DELETE FROM $db_table");
-
-            $sql_statement = $this->db->prepare(
-                "INSERT INTO $db_table (user_name, email) VALUES (?, ?)"
-            );
+            $userModel = new User();
+            $insert_error = "";
             try {
-                
+        
                 for ($i = 0; $i < count($data); $i++) {
-                    $sql_statement->bind_param("ss", $data[$i][0], $data[$i][1]);
-                    $sql_statement->execute();
+                    $userModel->createUser($data[$i][0], "admin", $insert_error);
+                    if (! empty($insert_error)) throw new Exception;
                 }
             
             } catch (Exception $insert_error) {

@@ -1,31 +1,31 @@
 <?php
-session_start();
-require '../config/db.php';
+    session_start();
+    
+    // If already logged in, go to home page
+    if (isset($_SESSION["user_id"])) {
+        // TODO: Change to dashboard page?
+        header("Location: /lao/project/views/home.php");
+        exit;
+    }
+    
+    
+    if ($_SERVER["REQUEST_METHOD"] != "POST")
+        return;
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    
+    require "../models/User.php";
+    $articleModel = new User();
 
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
+    $username = $_POST["username"];
+    $password = $_POST["password"];
 
-    if ($stmt->num_rows > 0) {
-        $stmt->bind_result($id, $hashedPassword);
-        $stmt->fetch();
+    $error = "";
 
-        if (password_verify($password, $hashedPassword)) {
-            $_SESSION['user_id'] = $id;
-            header("Location: ../views/dashboard.php");
-            exit;
-        } else {
-            $error = "Incorrect password.";
-        }
-    } else {
-        $error = "No such username.";
+    if ($articleModel->login($username, $password, $error)) {
+        //$articleModel->setUserType($_SESSION["user_id"], "admin");
+        header("Location: /lao/project/views/home.php");
+        exit;
     }
 
-    $stmt->close();
-    $conn->close();
-}
+    
+?>

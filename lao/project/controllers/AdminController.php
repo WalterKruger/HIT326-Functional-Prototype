@@ -1,4 +1,13 @@
 <?php
+
+    if ($_POST["action"] ?? "" == "set_type") {
+        require '../models/User.php';
+        $model = new User();
+
+        $model->setUserType($_SESSION["user_id"], $_POST["type"]);
+        return;
+    }
+    
     require '../models/Admin.php';
 
     $model = new Admin();
@@ -13,7 +22,8 @@
                 ["Walter Kruger", "walter@example.com"],
                 ["John Doe", "john@example.com"],
                 ["Jane Doe", "jane@example.com"],
-                ["Smith person", "smith@example.com"]
+                ["Smith person", "smith@example.com"],
+                ["admin", "admin@example.com"]  // Test case
             ];
             $model->populateUsers($data);
             break;

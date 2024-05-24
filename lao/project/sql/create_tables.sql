@@ -30,7 +30,9 @@ CREATE TABLE Account (
     email varchar(80),
     password_hash varchar(256),
     creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    last_login DATETIME
+    last_login DATETIME,
+
+    UNIQUE (user_name)
 );
 
 CREATE TABLE Comment (
@@ -47,9 +49,11 @@ CREATE TABLE Comment (
 
 
 CREATE TABLE Account_type (
-    type_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    type_id INT UNSIGNED PRIMARY KEY,
     type_name varchar(18)
 );
+INSERT INTO Account_type (type_id, type_name) VALUES (1, 'admin'), (2, 'editor'), (3, 'journalist'), (4, 'user');
+
 
 CREATE TABLE Account_to_type (
     account_id INT UNSIGNED,
