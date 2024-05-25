@@ -1,91 +1,67 @@
 <?php
-    // Include The base (need for inserting new accounts)
-    require "User.php";
+require_once '../models/User.php';
 
-    class Admin extends ModelBase {
-        // Filter function
-        private function SQLstatementIsValid($SQLstatement) {
-            // Empty lines
-            if (strlen( $SQLstatement ) == 0) return false;
+class Admin extends ModelBase {
+    private function SQLstatementIsValid($SQLstatement) {
+        $SQLstatement = trim($SQLstatement);
+        if (strlen($SQLstatement) == 0 || substr($SQLstatement, 0, 2) == "--") return false;
+        return true;
+    }
 
-            // SQL comments
-            if ( substr(trim($SQLstatement), 2) == "--") return false;
-
-            return true;
+    private function getSQLfileAsArray($pathToScript) {
+        if (!file_exists($pathToScript)) {
+            error_log("File '$pathToScript' doesn't exist");
+            return []; 
         }
+        $fileAsString = file_get_contents($pathToScript);
+        $arrayOfStatements = explode(";", $fileAsString);
+        return array_filter($arrayOfStatements, array($this, "SQLstatementIsValid"));
+    }
 
-        private function getSQLfileAsArray($pathToScript) {
-            if (!file_exists($pathToScript))
-                die("File '$pathToScript' doesn't exist"); 
-
-            $fileAsString = file_get_contents($pathToScript);
-            $arrayOfStatements = explode(";", $fileAsString);
-
-            return array_filter($arrayOfStatements, array($this, "SQLstatementIsValid"));
-        }
-
-        public function runSQLfile($sql_path) {
-            $createScriptAsArray = $this->getSQLfileAsArray($sql_path);
-
-            echo "<h3>Creating tables from '$sql_path'...</h3>";
-
-            $TAB_HTML = "&emsp;"; 
-
-            foreach($createScriptAsArray as $sqlStatement) {
-                echo str_replace(",", ",<br>$TAB_HTML $TAB_HTML", $sqlStatement) . "<br><br>";
-                
-                if ($this->db->query($sqlStatement)) {
-                    echo "<b>Created successfully!</b>";
-                } else {
-                    echo "<b>Error creating table:" . $this->db->error . "</b>";
-                }
-
-                echo "<br><br>";
-            }
-        }
-
-        public function populateUsers($data) {
-            echo "<h4>Inserting data into table...</h4>";
-            $this->db->query("DELETE FROM Account_to_type");
-            $this->db->query("DELETE FROM Account");
-
-            $userModel = new User();
-            $insert_error = "";
-            try {
-        
-                for ($i = 0; $i < count($data); $i++) {
-                    $userModel->createUser($data[$i][0], "admin", $insert_error);
-                    if (! empty($insert_error)) throw new Exception;
-                }
-            
-            } catch (Exception $insert_error) {
-                die("Error: $insert_error");
-            }
-        }
-
-
-        public function populateArticle($data) {
-            $db_table = "articles";
-
-            echo "<h4>Inserting data into $db_table...</h4>";
-
-            // First clear table
-            $this->db->query("DELETE FROM $db_table");
-
-            $sql_statement = $this->db->prepare(
-                "INSERT INTO $db_table (title, text_content) VALUES (?, ?)"
-            );
-            if (! $sql_statement) die ("Error: prepare statement was invalid");
-            try {
-                
-                for ($i = 0; $i < count($data); $i++) {
-                    $sql_statement->bind_param("ss", $data[$i][0], $data[$i][1]);
-                    $sql_statement->execute();
-                }
-            
-            } catch (Exception $insert_error) {
-                die("Error: $insert_error");
+    public function runSQLfile($sql_path) {
+        $createScriptAsArray = $this->getSQLfileAsArray($sql_path);
+        echo "<h3>Executing SQL from '$sql_path'...</h3>";
+        foreach($createScriptAsArray as $sqlStatement) {
+            $sqlStatement = trim($sqlStatement); // Ensure SQL statement is trimmed
+            if (!$sqlStatement) continue;
+            if ($this->db->query($sqlStatement)) {
+                echo "<b>Executed successfully!</b><br>";
+            } else {
+                echo "<b>Error executing SQL: " . $this->db->error . "</b><br>";
             }
         }
     }
+
+    public function populateUsers($data) {
+        echo "<h4>Inserting data into users...</h4>";
+        // Ensure all foreign key references are removed before deletion
+        $this->db->query("DELETE FROM Account_to_type");
+        $this->db->query("DELETE FROM Account");
+
+        $userModel = new User();
+        foreach ($data as $user) {
+            $error = "";
+            if (!$userModel->createUser($user[0], "password123", $error)) {
+                echo "Failed to insert user {$user[0]}: $error<br>";
+            }
+        }
+    }
+
+    public function populateArticle($data) {
+        echo "<h4>Inserting data into articles...</h4>";
+        // First clear dependent and then the main table
+        $this->db->query("DELETE FROM article_to_author");
+        $this->db->query("DELETE FROM articles");
+
+        $stmt = $this->db->prepare("INSERT INTO articles (title, text_content) VALUES (?, ?)");
+        if (!$stmt) die("Prepared statement failed: " . $this->db->error);
+
+        foreach ($data as $article) {
+            $stmt->bind_param("ss", $article[0], $article[1]);
+            if (!$stmt->execute()) {
+                echo "Failed to insert article: " . $stmt->error . "<br>";
+            }
+        }
+    }
+}
 ?>
