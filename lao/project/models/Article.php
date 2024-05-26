@@ -3,14 +3,13 @@ require_once 'Base.php';
 
 class Article extends ModelBase {
     public function fetchAllApproved() {
-        $query = "SELECT * FROM articles WHERE modification_date > creation_date ORDER BY modification_date DESC";
+        $query = "SELECT id, title, text_content, image_path, creation_date, modification_date FROM articles WHERE modification_date > creation_date ORDER BY modification_date DESC";
         $result = $this->db->query($query);
         return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
     public function fetchTopArticles() {
-        // This method will fetch the top articles based on some criteria, for example, the most recent approved articles
-        $query = "SELECT * FROM articles WHERE modification_date > creation_date ORDER BY modification_date DESC LIMIT 5";
+        $query = "SELECT id, title, text_content, image_path, creation_date, modification_date FROM articles ORDER BY modification_date DESC LIMIT 5";
         $result = $this->db->query($query);
         return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
@@ -31,7 +30,6 @@ class Article extends ModelBase {
     }
 
     public function fetchPendingArticles() {
-        // Fetch articles where creation and modification dates are the same
         $query = "SELECT * FROM articles WHERE modification_date = creation_date ORDER BY creation_date DESC";
         $result = $this->db->query($query);
         return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
@@ -46,7 +44,6 @@ class Article extends ModelBase {
         return true;
     }
 
-    // Since we can't use 'status', simulate rejection by setting modification date far in the past
     public function rejectArticle($articleId) {
         $stmt = $this->db->prepare("UPDATE articles SET modification_date = '1000-01-01 00:00:00' WHERE id = ?");
         $stmt->bind_param("i", $articleId);
@@ -55,5 +52,28 @@ class Article extends ModelBase {
         }
         return true;
     }
+
+    public function fetchComments($articleId) {
+        $stmt = $this->db->prepare("SELECT Comment.*, Account.user_name FROM Comment JOIN Account ON Comment.account_id = Account.id WHERE article_id = ?");
+        $stmt->bind_param("i", $articleId);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+    
+    public function addComment($articleId, $userId, $commentText) {
+        $stmt = $this->db->prepare("INSERT INTO Comment (account_id, article_id, text_contnet) VALUES (?, ?, ?)");
+        $stmt->bind_param("iis", $userId, $articleId, $commentText);
+        if (!$stmt->execute()) {
+            throw new Exception("Error adding comment: " . $stmt->error);
+        }
+    }    
+
+    public function deleteComment($commentId) {
+        $stmt = $this->db->prepare("DELETE FROM Comment WHERE id = ?");
+        $stmt->bind_param("i", $commentId);
+        if (!$stmt->execute()) {
+            throw new Exception("Error deleting comment: " . $stmt->error);
+        }
+    }    
 }
 ?>
