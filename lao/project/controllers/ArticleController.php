@@ -1,7 +1,8 @@
 <?php
-    require_once '../models/Article.php';
+require_once '../models/Article.php';
 
-    $articleModel = new Article();
-    $articleModel->fetchAll();
+$articleModel = new Article();
+$articles = $articleModel->fetchAllSorted();
+
+include '../views/articles.php'; // Include the view file
 ?>
-

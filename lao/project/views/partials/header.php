@@ -18,7 +18,6 @@ if (session_status() == PHP_SESSION_NONE) {
             <a href="/lao/project/views/home.php">Home</a>
             <a href="/lao/project/views/articles.php">Articles</a>
             <a href="/lao/project/views/top.php">Top</a>
-
             <?php if (isset($_SESSION["user_id"])): ?>
                 <a href="/lao/project/views/profile.php">My Profile</a>
                 <a href="/lao/project/views/logout.php">Logout</a>
@@ -26,9 +25,16 @@ if (session_status() == PHP_SESSION_NONE) {
                 <a href="/lao/project/views/login.php">Login</a>
                 <a href="/lao/project/views/signup.php">Signup</a>
             <?php endif; ?>
-
+            <?php if (isset($_SESSION["user_type"]) && $_SESSION["user_type"] == "journalist"): ?>
+                <a href="/lao/project/views/editor.php">Create Article</a>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] == 'editor'): ?>
+                <a href="/lao/project/views/review_articles.php">Pending Articles</a>
+            <?php endif; ?>
         </nav>
     </div>
 </header>
 <div class="main-container">
-<br><br><br>
+</div>
+</body>
+</html>

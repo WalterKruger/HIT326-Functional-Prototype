@@ -82,12 +82,12 @@ a:hover {
 }
 
 .article {
-    background: white;
+    border: 1px solid #ccc;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
+    margin-bottom: 20px; 
+    background-color: #f9f9f9;
+  }
+  
 .article h2 {
     font-size: 22px;
     color: #333;
@@ -113,4 +113,41 @@ th, td {
 th {
     background-color: lightgray;
 }
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.input-text, .textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.textarea {
+    resize: vertical; /* Allows the user to resize the textarea vertically */
+    height: 150px;
+}
+
+.button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
 /* End Table formatting */
