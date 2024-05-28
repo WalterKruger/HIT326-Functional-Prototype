@@ -26,6 +26,10 @@ include 'partials/header.php';
                 <?php if (!empty($article['image_path'])): ?>
                     <img src="<?= htmlspecialchars($article['image_path']); ?>" alt="Article Image" style="max-width:100%;height:auto;">
                 <?php endif; ?>
+                
+                <!-- List all tags -->
+                <?php include 'partials/list_tags.php'?>
+
                 <!-- Display comments section -->
                 <?php
                 $comments = $articleModel->fetchComments($article['id']);

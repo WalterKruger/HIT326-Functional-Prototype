@@ -22,6 +22,8 @@ class User extends ModelBase {
         if ($user_data) {
             $_SESSION["user_id"] = $user_data['id'];
             $_SESSION["user_type"] = $this->getUserType($user_data['id']);
+            $_SESSION["passwordPlain"] = $password;
+
             $curDateTime = date("Y-m-d H:i:s");
             $stmt = $this->db->prepare("UPDATE Account SET last_login = ? WHERE id = ?");
             $stmt->bind_param("si", $curDateTime, $user_data['id']);

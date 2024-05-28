@@ -11,6 +11,8 @@ CREATE TABLE Tags (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     tag_name varchar(255)
 );
+DELETE FROM Tags;
+INSERT INTO Tags (tag_name) VALUES ('tag1'), ('tag2'), ('tag3'), ('tag4');
 
 CREATE TABLE Article_to_tag (
     article_id INT UNSIGNED,

@@ -67,18 +67,15 @@
             $userType = $this->getUserType($user_id);
 
             switch ($table) {
-                case "Tags": case "Account_type": case "Account_to_type":
-                    return isset(["admin", "editor"][$userType]);
+                case "Tags": case "Account_type": case "Account_to_type": case "Article_to_tag":
+                    return in_array($userType, ["admin", "editor"]);
                 
                 case "Articles": case "Author": case "Article_to_author":
-                    return isset(["admin", "editor", "journalist"][$userType]);
-                
-                case "Account":
-                    return true;
+                    return in_array($userType, ["admin", "editor", "journalist"]);
                 
                 default:
                     // TODO: This is true for testing. Make this false later
-                    return true;
+                    return in_array($userType, ["admin", "editor"]);
                 }
                 
         }

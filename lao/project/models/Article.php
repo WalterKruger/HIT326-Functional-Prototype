@@ -3,8 +3,9 @@ require_once 'Base.php';
 
 class Article extends ModelBase {
     public function fetchAllApproved() {
-        $query = "SELECT id, title, text_content, image_path, creation_date, modification_date FROM articles WHERE modification_date > creation_date ORDER BY modification_date DESC";
+        $query = "SELECT id, title, text_content, image_path, creation_date, modification_date FROM articles ORDER BY modification_date DESC";
         $result = $this->db->query($query);
+
         return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 

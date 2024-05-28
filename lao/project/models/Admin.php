@@ -41,7 +41,7 @@ class Admin extends ModelBase {
         $userModel = new User();
         foreach ($data as $user) {
             $error = "";
-            if (!$userModel->createUser($user[0], "password123", $error)) {
+            if (!$userModel->createUser($user[0], "password123", "admin", $error)) {
                 echo "Failed to insert user {$user[0]}: $error<br>";
             }
         }
@@ -62,6 +62,37 @@ class Admin extends ModelBase {
                 echo "Failed to insert article: " . $stmt->error . "<br>";
             }
         }
+    }
+
+    public function addRandomTags() {
+        $this->db->query("DELETE FROM Article_to_tag");
+
+        $articleQuery = $this->db->query("SELECT id FROM Articles");
+        if ($articleQuery->num_rows == 0) return;
+
+        $articleIds = [];
+        while($row = $articleQuery->fetch_assoc())
+            $articleIds[] = $row['id'];
+
+        
+        $tagsQuery = $this->db->query("SELECT id FROM Tags");
+        if ($tagsQuery->num_rows == 0) return;
+    
+        $tagIds = [];
+        while($row = $tagsQuery->fetch_assoc())
+            $tagIds[] = $row['id'];
+        
+        
+        foreach ($articleIds as $articleId) {
+            $numOfTags = rand(0, count($tagIds) * 1.5);
+            
+            for ($i = 0; $i < $numOfTags; $i++) {
+                $tagId = $tagIds[rand(0, count($tagIds))];
+                $this->db->query("INSERT INTO Article_to_tag (article_id, tag_id) VALUES ($articleId, $tagId)");
+            }
+        }
+        
+        
     }
 }
 ?>

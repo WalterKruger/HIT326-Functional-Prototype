@@ -9,6 +9,9 @@
     <input type="radio" id="insert_articles" name="action" value="insert_articles">
     <label for="insert_articles">Insert dummy articles</label><br>
 
+    <input type="radio" id="add_tags" name="action" value="add_tags">
+    <label for="add_tags">Randomize tags</label><br>
+
     <?php if (isset($_SESSION["user_id"])): ?>
         <input type="radio" id="set_type" name="action" value="set_type">
         <label for="set_type">Set account type</label>
