@@ -100,14 +100,38 @@ a:hover {
     line-height: 1.6;
 }
 
-span.tag {
+
+div.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+span.tag-container {
+    display: flex;
+    align-items: center;
+
     padding: 3px;
     margin-bottom: 10px;
 
     background-color: red;
     border-radius: 10px;
-    
 }
+.vote-buttons {
+    display: flex;
+    flex-direction: column;
+}
+/* All vote buttons*/
+.tag-container button {
+    margin-left: 3px;
+    padding: 5px;
+}
+
+.vote-buttons button {
+    margin: 2px 0;
+    padding-top: 0px;
+}
+
+
 
 /* Table formatting */
 table, th, td {

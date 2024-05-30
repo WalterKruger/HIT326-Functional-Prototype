@@ -14,12 +14,11 @@ CREATE TABLE Tags (
 DELETE FROM Tags;
 INSERT INTO Tags (tag_name) VALUES ('tag1'), ('tag2'), ('tag3'), ('tag4');
 
-CREATE TABLE Article_to_tag (
+CREATE TABLE Tag_for_article (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     article_id INT UNSIGNED,
     tag_id INT UNSIGNED,
     weight FLOAT,
-
-    PRIMARY KEY (article_id, tag_id),
 
     FOREIGN KEY (article_id) REFERENCES Articles(id),
     FOREIGN KEY (tag_id) REFERENCES Tags(id)
@@ -35,6 +34,17 @@ CREATE TABLE Account (
     last_login DATETIME,
 
     UNIQUE (user_name)
+);
+
+CREATE TABLE Tag_vote (
+    article_tag_id INT UNSIGNED,
+    account_id INT UNSIGNED,
+    vote BOOL,
+
+    PRIMARY KEY (article_tag_id, account_id),
+
+    FOREIGN KEY (article_tag_id) REFERENCES Tag_for_article(id),
+    FOREIGN KEY (account_id) REFERENCES Account(id)
 );
 
 CREATE TABLE Comment (

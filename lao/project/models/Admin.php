@@ -65,7 +65,8 @@ class Admin extends ModelBase {
     }
 
     public function addRandomTags() {
-        $this->db->query("DELETE FROM Article_to_tag");
+        $this->db->query("DELETE FROM Tag_vote");
+        $this->db->query("DELETE FROM Tag_for_article");
 
         $articleQuery = $this->db->query("SELECT id FROM Articles");
         if ($articleQuery->num_rows == 0) return;
@@ -87,8 +88,9 @@ class Admin extends ModelBase {
             $numOfTags = rand(0, count($tagIds) * 1.5);
             
             for ($i = 0; $i < $numOfTags; $i++) {
-                $tagId = $tagIds[rand(0, count($tagIds))];
-                $this->db->query("INSERT INTO Article_to_tag (article_id, tag_id) VALUES ($articleId, $tagId)");
+                $tagId = $tagIds[$i];
+                // $tagId = $tagIds[rand(0, count($tagIds))];
+                $this->db->query("INSERT INTO Tag_for_article (article_id, tag_id) VALUES ($articleId, $tagId)");
             }
         }
         

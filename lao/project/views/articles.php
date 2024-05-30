@@ -48,6 +48,8 @@ include 'partials/header.php';
                         <button type="submit">Add Comment</button>
                     </form>
                 <?php endif; ?>
+
+                <?php include 'partials/select_tag.php'?>
             </div>
         <?php endforeach; ?>
         <?php if (empty($articles)) echo '<p>No articles found.</p>'; ?>
