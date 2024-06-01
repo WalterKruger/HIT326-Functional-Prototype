@@ -13,41 +13,24 @@ class Tags extends ModelBase {
     }
 
     public function getTags($articleID, $accountId) {
-        $stmt = $this->db->prepare("SELECT id, tag_id FROM Tag_for_article WHERE article_id = ?");
-        $stmt->bind_param('i', $articleID);
+        $stmt = "SELECT tags.id, tags.tag_name, tag_vote.vote FROM tag_for_article
+                    INNER JOIN tags ON tag_for_article.tag_id = tags.id
+                    LEFT JOIN tag_vote ON tag_for_article.id = tag_vote.article_tag_id AND tag_vote.account_id = ?
+                    WHERE tag_for_article.article_id = ?";
+        
+        $stmt = $this->db->prepare($stmt);
+        $stmt->bind_param('ii', $accountId, $articleID);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $tagForArticleResult = [];
-        while ($row = $result->fetch_assoc()) {
-            $tagForArticleResult[] = ["tag_id" => $row["tag_id"], "articleTagId" => $row["id"]];
-        }
-
         $tagData = [];
-        foreach ($tagForArticleResult as $tagForArticle) {
-            $tagId = $tagForArticle["tag_id"];
-
-            // Get the lable of the tag
-            $stmt = $this->db->prepare("SELECT tag_name FROM Tags WHERE id = ?");
-            $stmt->bind_param('i', $tagId);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            $tagName = $result->fetch_assoc()["tag_name"];
-
-
-            // Check if the user has voted
-            $stmt = $this->db->prepare("SELECT vote FROM Tag_vote WHERE article_tag_id = ? AND account_id = ?");
-            $stmt->bind_param('ii', $tagForArticle["articleTagId"], $accountId);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            $userVote = ($result->num_rows == 0)? -1 : $result->fetch_assoc()["vote"];
-
-
-            $tagData[] = ['name' => $tagName, 'id' => $tagId, 'vote' => $userVote];
+        while ($row = $result->fetch_assoc()) {
+            $tagData[] = [
+                'name' => $row['tag_name'], 
+                'id' => $row['id'], 
+                'vote' => isset($row['vote'])? $row['vote'] : -1
+            ];
         }
-
         
         
         return $tagData;
@@ -64,6 +47,25 @@ class Tags extends ModelBase {
         }
 
         return $listOfTags;
+    }
+
+    public function getUnsetTags($articleID) {
+        $stmt = "SELECT tags.id, tags.tag_name FROM tags
+                    LEFT JOIN tag_for_article ON tags.id = tag_for_article.tag_id 
+                        AND tag_for_article.article_id = ?
+                    WHERE tag_for_article.article_id IS NULL";
+        
+        $stmt = $this->db->prepare($stmt);
+        $stmt->bind_param('i', $articleID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $unsetTags = [];
+        while ($row = $result->fetch_assoc()) {
+            $unsetTags[] = ["name" => $row["tag_name"], "id" => $row["id"]];
+        }
+
+        return $unsetTags;
     }
 
 

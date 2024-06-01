@@ -11,6 +11,6 @@
         die();
     }
 
-    $tagsToAddOption = $model->getAllTags();
+    $tagsToAddOption = $model->getUnsetTags($article['id']);
 
 ?>

@@ -15,7 +15,9 @@ include 'partials/header.php';
 </head>
 <body>
 <div class="container">
+
     <h1>Articles</h1>
+
     <div class="articles-list">
         <?php foreach ($articles as $article): ?>
             <div class="article">
@@ -40,6 +42,10 @@ include 'partials/header.php';
                     }
                 }
                 ?>
+
+                <!-- Editor setting tags -->
+                <?php include 'partials/select_tag.php'?>
+
                 <!-- Only show comment input if user is logged in -->
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <form action="/lao/project/controllers/SubmitCommentController.php" method="post">
@@ -48,8 +54,6 @@ include 'partials/header.php';
                         <button type="submit">Add Comment</button>
                     </form>
                 <?php endif; ?>
-
-                <?php include 'partials/select_tag.php'?>
             </div>
         <?php endforeach; ?>
         <?php if (empty($articles)) echo '<p>No articles found.</p>'; ?>

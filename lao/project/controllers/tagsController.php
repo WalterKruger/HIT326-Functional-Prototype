@@ -26,7 +26,6 @@
         die();
     }
 
-    $userVote = null;
-    $tagToDisplay = $model->getTags($article['id'], $_SESSION['user_id'], $userVote);
+    $tagToDisplay = $model->getTags($article['id'], isset($_SESSION['user_id'])? $_SESSION['user_id'] : null);
     
 ?>
