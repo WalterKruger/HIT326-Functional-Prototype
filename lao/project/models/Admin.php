@@ -85,7 +85,7 @@ class Admin extends ModelBase {
         
         
         foreach ($articleIds as $articleId) {
-            $numOfTags = rand(0, count($tagIds) * 1.5);
+            $numOfTags = rand(0, count($tagIds));
             
             for ($i = 0; $i < $numOfTags; $i++) {
                 $tagId = $tagIds[$i];

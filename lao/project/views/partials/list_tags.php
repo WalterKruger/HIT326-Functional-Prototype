@@ -52,7 +52,7 @@
 </div>
 
 
-<?php if (isset($_SESSION['user_type'])): ?>
+<?php if (isset($_SESSION['user_id'])): ?>
     <?php require '../controllers/proposeTagsController.php'; ?>
 
     <div id="addPopup_<?php echo $article['id']?>" class="overlay">
